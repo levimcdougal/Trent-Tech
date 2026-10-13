@@ -1,0 +1,4 @@
+import { Link, useLocation } from 'react-router-dom'
+import legacy from '../legacy.json'
+import { PageHero } from './Products'
+export default function Legacy(){const {pathname}=useLocation();const page=legacy.find(p=>p.path===pathname.replace(/\/$/,''));if(!page)return <main><PageHero label="TRENT TECHNOLOGIES" title="Page not found"/><div className="container content-section"><p>Find product information and installation guidance in our resource library.</p><Link className="button" to="/resources">Explore resources</Link></div></main>;return <main><PageHero label="COSTGARD™ / TECHNICAL RESOURCES" title={page.title}/><section className="container content-section"><div className="breadcrumbs"><Link to="/">Home</Link><span>/</span><Link to="/resources">Resources</Link><span>/</span>{page.title}</div><article className="legacy-content" dangerouslySetInnerHTML={{__html:page.html}}/></section></main>}
