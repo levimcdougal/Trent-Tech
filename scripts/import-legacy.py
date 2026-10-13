@@ -47,7 +47,10 @@ assets={}; errors=[]
 def imageget(src):
  url=urllib.parse.urljoin(BASE,src);name=urllib.parse.unquote(urllib.parse.urlparse(url).path).replace('/','_').replace(' ','_')
  try:
-  (ROOT/'public/legacy'/name).write_bytes(fetch(url));return src,'/legacy/'+name
+  raw=fetch(url)
+  if not pathlib.Path(name).suffix:
+   name += '.png' if raw.startswith(b'\x89PNG') else '.jpg' if raw.startswith(b'\xff\xd8') else '.gif' if raw.startswith(b'GIF') else '.webp' if raw.startswith(b'RIFF') else ''
+  (ROOT/'public/legacy'/name).write_bytes(raw);return src,'/legacy/'+name
  except Exception as e:return src,None
 for src,dst in concurrent.futures.ThreadPoolExecutor(3).map(imageget,images):
  if dst:assets[src]=dst
